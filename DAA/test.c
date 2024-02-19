@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #define inf 0x7fffffff
+#define int long long
 #define ll long long
 
 void printmat(ll ** arr, int n){
@@ -29,138 +30,164 @@ ll** mmult(ll** a, ll** b, int size){
     return c;
 }
 
-ll** addmatrix(ll** a,int ax,int ay,ll** b,int bx,int by,int size, int multiplier){
-    ll** ret=malloc(size*sizeof(ll*));
-    for(int i=0;i<size;i++){
-        ret[i]=malloc(size*sizeof(ll));
-    }
-    for(int i=0;i<size;i++){
-        for(int j=0;j<size;j++){
-            ret[i][j]=a[ay+i][ax+j]+multiplier*b[by+i][bx+j];
+
+void sum(int** A, int** B, int** C, int tam) {
+    int i, j;
+
+    for (i = 0; i < tam; i++) {
+        for (j = 0; j < tam; j++) {
+            C[i][j] = A[i][j] + B[i][j];
         }
     }
-    return ret;
 }
 
-ll** mmultstrassen(ll** a,int ax, int ay, ll**b,int bx, int by, int size){
-    if(size==2){
-        ll** ret=malloc(size*sizeof(ll*));
-        for(int i=0;i<size;i++){
-            ret[i]=malloc(size*sizeof(ll));
-        }
-        ll p,q,r,s,t,u,v;
-        p=(a[ay][ax]+a[ay+1][ax+1])*(b[by][bx]+b[by+1][bx+1]);
-        q=(a[ay+1][ax]+a[ay+1][ax+1])*b[by][bx];
-        r=a[ay][ax]*(b[by][bx+1]-b[by+1][bx+1]);
-        s=a[ay+1][ax+1]*(b[by+1][bx]-b[by][bx]);
-        t=(a[ay][ax]+a[ay][ax+1])*b[by+1][bx+1];
-        u=(a[ay+1][ax]-a[ay][ax])*(b[by][bx]+b[by][bx+1]);
-        v=(a[ay][ax+1]-a[ay+1][ax+1])*(b[by+1][bx]+b[by+1][bx+1]);
-        ret[0][0]=p+s-t+v;
-        ret[0][1]=r+t;
-        ret[1][0]=q+s;
-        ret[1][1]=p-q+r+u;
-        return ret;
-    }
-    ll** ret=malloc(size*sizeof(ll*));
-    for(int i=0;i<size;i++){
-        ret[i]=malloc(size*sizeof(ll));
-    }
-    int mid=size/2;
-    ll **c,**d,**e,**f,**g,**h,**im,**j,**k,**l;
-    c=addmatrix(a,ax,ay,a,ax+mid,ay+mid,size/2,1);
-    d=addmatrix(b,bx,by,b,bx+mid,by+mid,size/2,1);
-    ll** p=mmultstrassen(c,0,0,d,0,0,size/2);
-    e=addmatrix(a,ax,ay+mid,a,ax+mid,ay+mid,size/2,1);
-    ll** q=mmultstrassen(e,0,0,b,bx,by,size/2);
-    f=addmatrix(b,bx+mid,by,b,bx+mid,by+mid,size/2,-1);
-    ll** r=mmultstrassen(a,ax,ay,f,0,0,size/2);
-    g=addmatrix(b,bx,by+mid,b,bx,by,size/2,-1);
-    ll** s=mmultstrassen(a,ax+mid,ay+mid,g,0,0,size/2);
-    h=addmatrix(a,ax,ay,a,ax+mid,ay,size/2,1);
-    ll** t=mmultstrassen(h,0,0,b,bx+mid,by+mid,size/2);
-    im=addmatrix(a,ax,ay+mid,a,ax,ay,size/2,-1);
-    j=addmatrix(b,bx,by,b,bx+mid,by,size/2,1);
-    ll** u=mmultstrassen(im,0,0,j,0,0,size/2);
-    k=addmatrix(a,ax+mid,ay,a,ax+mid,ay+mid,size/2,-1);
-    l=addmatrix(b,bx,by+mid,b,bx+mid,by+mid,size/2,1);
-    ll** v=mmultstrassen(k,0,0,l,0,0,size/2);
-    ll** c11,**c12,**c21,**c22;
-    c11=addmatrix(p,0,0,s,0,0,size/2,1);
-    c11=addmatrix(c11,0,0,t,0,0,size/2,-1);
-    c11=addmatrix(c11,0,0,v,0,0,size/2,1);
-    c12=addmatrix(r,0,0,t,0,0,size/2,1);
-    c21=addmatrix(q,0,0,s,0,0,size/2,1);
-    c22=addmatrix(p,0,0,r,0,0,size/2,1);
-    c22=addmatrix(c22,0,0,q,0,0,size/2,-1);
-    c22=addmatrix(c22,0,0,u,0,0,size/2,1);
-    for(int i=0;i<mid;i++){
-        for(int j=0;j<mid;j++){
-            ret[i][j]=c11[i][j];
+void subtract(int** A, int** B, int** C, int tam) {
+    int i, j;
+
+    for (i = 0; i < tam; i++) {
+        for (j = 0; j < tam; j++) {
+            C[i][j] = A[i][j] - B[i][j];
         }
     }
-    for(int i=mid;i<size;i++){
-        for(int j=0;j<mid;j++){
-            ret[i][j]=c21[i-mid][j];
-        }
-    }
-    for(int i=0;i<mid;i++){
-        for(int j=mid;j<size;j++){
-            ret[i][j]=c12[i][j-mid];
-        }
-    }
-    for(int i=mid;i<size;i++){
-        for(int j=mid;j<size;j++){
-            ret[i][j]=c22[i-mid][j-mid];
-        }
-    }
-    for(int i=0;i<size/2;i++){
-        free(c[i]);
-        free(d[i]);
-        free(e[i]);
-        free(f[i]);
-        free(g[i]);
-        free(h[i]);
-        free(im[i]);
-        free(j[i]);
-        free(k[i]);
-        free(l[i]);
-        free(p[i]);
-        free(q[i]);
-        free(r[i]);
-        free(s[i]);
-        free(t[i]);
-        free(u[i]);
-        free(v[i]);
-        free(c11[i]);
-        free(c12[i]);
-        free(c21[i]);
-        free(c22[i]);
-    }
-    free(c);
-    free(d);
-    free(e);
-    free(f);
-    free(g);
-    free(h);
-    free(im);
-    free(j);
-    free(k);
-    free(l);
-    free(p);
-    free(q);
-    free(r);
-    free(s);
-    free(t);
-    free(u);
-    free(v);
-    free(c11);
-    free(c12);
-    free(c21);
-    free(c22);
-    return ret;
 }
 
+void strassen(int** A, int** B, int** C, int tam) {
+    if (tam == 1) {
+        C[0][0] = A[0][0] * B[0][0];
+        return;
+    }
+
+    int newTam = tam/2;
+    int** A11 = (int**)malloc(newTam * sizeof(int*));
+    int** A12 = (int**)malloc(newTam * sizeof(int*));
+    int** A21 = (int**)malloc(newTam * sizeof(int*));
+    int** A22 = (int**)malloc(newTam * sizeof(int*));
+
+    int** B11 = (int**)malloc(newTam * sizeof(int*));
+    int** B12 = (int**)malloc(newTam * sizeof(int*));
+    int** B21 = (int**)malloc(newTam * sizeof(int*));
+    int** B22 = (int**)malloc(newTam * sizeof(int*));
+
+    int** C11 = (int**)malloc(newTam * sizeof(int*));
+    int** C12 = (int**)malloc(newTam * sizeof(int*));
+    int** C21 = (int**)malloc(newTam * sizeof(int*));
+    int** C22 = (int**)malloc(newTam * sizeof(int*));
+
+    int** P1 = (int**)malloc(newTam * sizeof(int*));
+    int** P2 = (int**)malloc(newTam * sizeof(int*));
+    int** P3 = (int**)malloc(newTam * sizeof(int*));
+    int** P4 = (int**)malloc(newTam * sizeof(int*));
+    int** P5 = (int**)malloc(newTam * sizeof(int*));
+    int** P6 = (int**)malloc(newTam * sizeof(int*));
+    int** P7 = (int**)malloc(newTam * sizeof(int*));
+
+    int** AResult = (int**)malloc(newTam * sizeof(int*));
+    int** BResult = (int**)malloc(newTam * sizeof(int*));
+
+    int i, j;
+
+    for (i = 0; i < newTam; i++) {
+        A11[i] = (int*)malloc(newTam * sizeof(int));
+        A12[i] = (int*)malloc(newTam * sizeof(int));
+        A21[i] = (int*)malloc(newTam * sizeof(int));
+        A22[i] = (int*)malloc(newTam * sizeof(int));
+
+        B11[i] = (int*)malloc(newTam * sizeof(int));
+        B12[i] = (int*)malloc(newTam * sizeof(int));
+        B21[i] = (int*)malloc(newTam * sizeof(int));
+        B22[i] = (int*)malloc(newTam * sizeof(int));
+
+        C11[i] = (int*)malloc(newTam * sizeof(int));
+        C12[i] = (int*)malloc(newTam * sizeof(int));
+        C21[i] = (int*)malloc(newTam * sizeof(int));
+        C22[i] = (int*)malloc(newTam * sizeof(int));
+
+        P1[i] = (int*)malloc(newTam * sizeof(int));
+        P2[i] = (int*)malloc(newTam * sizeof(int));
+        P3[i] = (int*)malloc(newTam * sizeof(int));
+        P4[i] = (int*)malloc(newTam * sizeof(int));
+        P5[i] = (int*)malloc(newTam * sizeof(int));
+        P6[i] = (int*)malloc(newTam * sizeof(int));
+        P7[i] = (int*)malloc(newTam * sizeof(int));
+
+        AResult[i] = (int*)malloc(newTam * sizeof(int));
+        BResult[i] = (int*)malloc(newTam * sizeof(int));
+    }
+
+    for (i = 0; i < newTam; i++) {
+        for (j = 0 ; j < newTam; j++) {
+            A11[i][j] = A[i][j];
+            A12[i][j] = A[i][j + newTam];
+            A21[i][j] = A[i + newTam][j];
+            A22[i][j] = A[i + newTam][j + newTam];
+
+            B11[i][j] = B[i][j];
+            B12[i][j] = B[i][j + newTam];
+            B21[i][j] = B[i + newTam][j];
+            B22[i][j] = B[i + newTam][j + newTam];
+        }
+    }
+
+    sum(A11, A22, AResult, newTam);
+    sum(B11, B22, BResult, newTam);
+    strassen(AResult, BResult, P1, newTam);
+
+    sum(A21, A22, AResult, newTam);
+    strassen(AResult, B11, P2, newTam);
+
+    subtract(B12, B22, BResult, newTam);
+    strassen(A11, BResult, P3, newTam);
+
+    subtract(B21, B11, BResult, newTam);
+    strassen(A22, BResult, P4, newTam);
+
+    sum(A11, A12, AResult, newTam);
+    strassen(AResult, B22, P5, newTam);
+
+    subtract(A21, A11, AResult, newTam);
+    sum(B11, B12, BResult, newTam);
+    strassen(AResult, BResult, P6, newTam);
+
+    subtract(A12, A22, AResult, newTam);
+    sum(B21, B22, BResult, newTam);
+    strassen(AResult, BResult, P7, newTam);
+
+    sum(P3, P5, C12, newTam);
+    sum(P2, P4, C21, newTam);
+
+    sum(P1, P4, AResult, newTam);
+    sum(AResult, P7, BResult, newTam);
+    subtract(BResult, P5, C11, newTam);
+
+    sum(P1, P3, AResult, newTam);
+    sum(AResult, P6, BResult, newTam);
+    subtract(BResult, P2, C22, newTam);
+
+    for (i = 0; i < newTam ; i++) {
+        for (j = 0 ; j < newTam ; j++) {
+            C[i][j] = C11[i][j];
+            C[i][j + newTam] = C12[i][j];
+            C[i + newTam][j] = C21[i][j];
+            C[i + newTam][j + newTam] = C22[i][j];
+        }
+    }
+
+    for (i = 0; i < newTam; i++) {
+        free(A11[i]); free(A12[i]); free(A21[i]); free(A22[i]);
+        free(B11[i]); free(B12[i]); free(B21[i]); free(B22[i]);
+        free(C11[i]); free(C12[i]); free(C21[i]); free(C22[i]);
+        free(P1[i]); free(P2[i]); free(P3[i]); free(P4[i]);
+        free(P5[i]); free(P6[i]); free(P7[i]);
+        free(AResult[i]); free(BResult[i]);
+    }
+
+    free(A11); free(A12); free(A21); free(A22);
+    free(B11); free(B12); free(B21); free(B22);
+    free(C11); free(C12); free(C21); free(C22);
+    free(P1); free(P2); free(P3); free(P4);
+    free(P5); free(P6); free(P7);
+    free(AResult); free(BResult);
+}
 
 
 int main(){
@@ -181,7 +208,10 @@ int main(){
         mat2[i]=calloc(size, sizeof(ll));
     }
     ll** ans;
-    ll** ans2;
+    ll** ans2=malloc(size*sizeof(ll*));
+    for(int i=0;i<size;i++){
+        ans2[i]=calloc(size, sizeof(ll));
+    }
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
             mat1[i][j]=arr[i*4+j];
@@ -189,7 +219,7 @@ int main(){
         }
     }
     ans=mmult(mat1,mat2,4);
-    ans2=mmultstrassen(mat1,0,0,mat2,0,0,4);
+    strassen(mat1,mat2,ans2,4);
     printmat(ans,4);
     printmat(ans2,4);
     

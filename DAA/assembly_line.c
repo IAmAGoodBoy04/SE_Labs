@@ -56,6 +56,23 @@ int main(){
     for(int i=n-2;i>=0;i--){
         f[i]=path[f[i+1]-1][i+1];
     }
+
+    printf("The matrix of minimum costs for each of the stations is (exit cost has been added to the last station):\n");
+    for (int i = 0; i < n; i++){
+        printf("%4d ",a[i]);
+    }printf("\n");
+    for (int i = 0; i < n; i++){
+        printf("%4d ",b[i]);
+    }printf("\n");
+    printf("Matrix showing path followed for each station: (each number represents the line used to arrive to that station)\n");
+    for(int i=0;i<2;i++){
+        for(int j=0;j<n;j++){
+            printf("%d  ",path[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+
     printf("The path followed was: (entry and exit times have been added to the first and last elements)\n");
     printf("Line 1 -> ");
     for(int i=0;i<n;i++){
@@ -77,7 +94,7 @@ int main(){
         }
     }
     printf("\n");
-    printf("The minimum time to get through all the stations is: %d",follow==1?a[n-1]:b[n-1]);
+    printf("\nThe minimum time to get through all the stations is: %d",follow==1?a[n-1]:b[n-1]);
 
 return 0;
 }

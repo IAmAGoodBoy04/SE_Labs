@@ -30,15 +30,19 @@ int main(){
         }
     }
     printf("Matrix of solutions: \n");
-    printf("-\t");
-    for(int i=0;i<=n;i++){
-        printf("%d\t",i);
+    printf("%c\t%3d ",'-',0);
+    for(int i=0;i<n;i++){
+        printf("%3c ",a[i]);
     }
     printf("\n\n");
     for(int i=0;i<=m;i++){
-        printf("%d\t",i);
+        if(i==0){
+            printf("%d \t",0);
+        }
+        else
+        printf("%c\t",b[i-1]);
         for(int j=0;j<=n;j++){
-            printf("%d\t",arr[i][j]);
+            printf("%3d ",arr[i][j]);
         }
         printf("\n");
     }

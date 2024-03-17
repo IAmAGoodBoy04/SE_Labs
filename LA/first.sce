@@ -1,19 +1,22 @@
-clc
-A=[1 1 1;1 2 4;1 4 10];
-printf("Original matrix is:");
+clc;
+A=[1 3 5;2 4 1;1 2 3];
+printf("the matrix A is: \n");
 disp(A);
-n=3;
-for i=1:n
-    if A(i,i)~=0
-        A(i,:)=A(i,:)/A(i,i);
-    end
-    disp(A);
-    for j=i+1:n
-        A(j,:)=A(j,:)-A(j,i)*A(i,:)
-    end
-    if A(1,2)== A(2,2)
-    A(1,:)=A(1,:)-A(2,:)
-    else
-    end
-    disp(A)
-end
+S=sum(A);
+printf("The sum of all entries of A is: ");
+disp(S);
+P=prod(A);
+printf("The product of all entries of A is:");
+disp(P);
+B=sum(A,'c');
+printf("The rowwise sum of A is: ");
+disp(B);
+C=sum(A,'r');
+printf("The columwise sum of A is: ");
+disp(C);
+D=prod(A,'r');
+printf("The columwise product of A is: ");
+disp(D);
+E=prod(A,'c');
+printf("The rowwise product of A is: ");
+disp(E);

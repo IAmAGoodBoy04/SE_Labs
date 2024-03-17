@@ -33,25 +33,28 @@ signed main(){
     scanf("%d",&n);
     char a='A';
     int p[n+1];
-    printf("Enter dimensions of matrix %c: ",a++);
-    scanf("%dx%d",&p[0],&p[1]);
-    // for(int i=0;i<=n;i++){
-    //     p[i]=rand()%30;
-    //     if(p[i]<2){
-    //         p[i]=2;
-    //     }
-    //     printf("%d ",p[i]);
-    // }
-    // printf("\n");
-    temp=p[1];
-    for(int i=1;i<n;i++){
-        printf("Enter dimensions of matrix %c: ",a++);
-        scanf("%dx%d",&temp,&p[i+1]);
-        if(temp!=p[i]){
-            printf("Invalid dimensions\n");
-            return 0;
+    // printf("Enter dimensions of matrix %c: ",a++);
+    // scanf("%dx%d",&p[0],&p[1]);
+    for(int i=0;i<=n;i++){
+        p[i]=rand()%46;
+        if(p[i]<2){
+            p[i]=2;
         }
     }
+    printf("The array P is (random values): ");
+    for(int i=0;i<=n;i++){
+        printf("%d ",p[i]);
+    }
+    printf("\n");
+    // temp=p[1];
+    // for(int i=1;i<n;i++){
+    //     printf("Enter dimensions of matrix %c: ",a++);
+    //     scanf("%dx%d",&temp,&p[i+1]);
+    //     if(temp!=p[i]){
+    //         printf("Invalid dimensions\n");
+    //         return 0;
+    //     }
+    // }
     int m[n][n];
     int** s=malloc(n*sizeof(int*));
     for(int i=0;i<n;i++){
@@ -93,6 +96,13 @@ signed main(){
     printf("The parenthesized expression is:\n");
     char* exp=parenthesize(0,n-1,s);
     printf("%s\n",exp);
+    printf("The number of scalar multiplications with optimal parenthesization are: %d\n",m[0][n-1]);
+    int naive=0;
+    for(int i=1;i<n;i++){
+        temp=p[0]*p[i]*p[i+1];
+        naive+=temp;
+    }
+    printf("The number of scalar multiplications with naive parenthesization are: %d\n",naive);
     for(int i=0;i<n;i++){
         free(s[i]);
     }

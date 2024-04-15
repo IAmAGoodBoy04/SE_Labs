@@ -105,7 +105,7 @@ void calculate(int** arr, int coordi,int coordj, int direction){
     }
     int minindex=-1,min=inf;
     for(int i=0;i<4;i++){
-        if(scores[i]<min){
+        if(scores[i]<=min){
             minindex=i;
             min=scores[i];
         }

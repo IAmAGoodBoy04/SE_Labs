@@ -1,22 +1,24 @@
 clc;
-A=[1 3 5;2 4 1;1 2 3];
-printf("the matrix A is: \n");
+A=[1 2 6;3 4 1;6 -1 -1];
+B=[22;26;19];
 disp(A);
-S=sum(A);
-printf("The sum of all entries of A is: ");
-disp(S);
-P=prod(A);
-printf("The product of all entries of A is:");
-disp(P);
-B=sum(A,'c');
-printf("The rowwise sum of A is: ");
 disp(B);
-C=sum(A,'r');
-printf("The columwise sum of A is: ");
+C=[A B];
+n=3;
+for i=1:n
+    if C(i,i)~=0
+        C(i,:)=C(i,:)/C(i,i);
+    end
+    disp(C);
+    for j=i+1:n
+        C(j,:)=C(j,:)-C(j,i)*C(i,:); 
+    end
+    disp(C);
+end
+
+for i=n:-1:2
+    for j=1:i-1
+        C(j,:)=C(j,:)-C(i,:)*C(j,i); 
+    end
+end
 disp(C);
-D=prod(A,'r');
-printf("The columwise product of A is: ");
-disp(D);
-E=prod(A,'c');
-printf("The rowwise product of A is: ");
-disp(E);

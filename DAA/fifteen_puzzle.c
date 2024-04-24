@@ -37,7 +37,7 @@ int score(int** arr){
     int sc=0;
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
-            if(arr[i][j]!=(4*i+j+1)){
+            if(arr[i][j]!=(4*i+j+1) && arr[i][j]!=16){
                 sc++;
             }
         }
